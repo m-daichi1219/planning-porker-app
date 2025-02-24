@@ -1,0 +1,14 @@
+---
+description: Backend Rules
+globs: apps/backend/**/*.ts
+---
+name: Backend Rules
+pattern: "apps/backend/**/*.ts"
+description: "バックエンド機能の最適化と API 設計"
+rules:
+  - "AWS Lambda の処理は短時間で完了するように設計する"
+  - "非同期処理は Promise.all を活用して並列処理を行う"
+  - "環境変数 (process.env) を使用し、ハードコーディングを避ける"
+  - "エラーハンドリングを統一し、適切なログ出力を行う"
+  - "AWS CDK でインフラをコードで管理し、インフラの変更を追跡可能にする"
+  - "TDDで各機能を開発する"

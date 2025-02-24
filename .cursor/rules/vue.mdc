@@ -1,0 +1,15 @@
+---
+description: Vue Component Rules
+globs: apps/frontend/**/*.vue
+---
+- name: Vue Component Rules
+- pattern: "apps/frontend/**/*.vue"
+- description: "Vueコンポーネントのルール"
+- rules:
+  - "VueはComposition APIを使用し、Options APIは避ける"
+  - "コンポーネントは適切に分割し、肥大化を防ぐ"
+  - "Props は明示的に型を指定する"
+  - "computed や watch を適切に活用し、不要な再レンダリングを防ぐ"
+  - "ローカルステートを適切に管理し、Piniaを利用する"
+  - "v-forを使用する際はkey属性を指定する"
+  - "コンポーネントのテストをStorybookで行い、VRT (Visual Regression Test) を実施する"

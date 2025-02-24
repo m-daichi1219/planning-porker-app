@@ -1,0 +1,14 @@
+---
+description: Documentation Rules
+globs: 
+---
+name: Documentation Rules
+pattern: "docs/**/*.md"
+description: "開発ドキュメントの標準化"
+rules:
+  - "ドキュメントは簡潔かつ明瞭に記述する"
+  - "コードブロックを適切に使用し、実装例を明示する"
+  - "APIのリクエスト・レスポンスの例を記載する"
+  - "開発者向けのセットアップ手順 (`setup.md`) を整理する"
+  - "変更履歴 (`CHANGELOG.md`) を適宜更新する"
+  - "README.md にはプロジェクトの概要・セットアップ手順を記載する"

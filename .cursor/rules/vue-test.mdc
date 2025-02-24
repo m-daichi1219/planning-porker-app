@@ -1,0 +1,13 @@
+---
+description: Vue Testing Rules
+globs: apps/frontend/**/*.vue
+---
+name: Testing Rules
+pattern: "apps/frontend/**/*.vue"
+description: "Vitest および Storybook のテスト戦略"
+rules:
+  - "テストケースは単一責務を持つようにする（1つのテストで複数の動作を検証しない）"
+  - "外部API呼び出しはモック化し、テストの安定性を確保する"
+  - "Storybook の Interactions テストを活用し、ユーザー操作をテストする"
+  - "Visual Regression Test (VRT) を `reg-cli` で実行する"
+  - "カバレッジレポートを生成し、重要な機能のテストが十分に行われているか確認する"

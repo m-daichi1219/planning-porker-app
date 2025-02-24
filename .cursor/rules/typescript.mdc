@@ -1,0 +1,17 @@
+---
+description: TypeScript Rules
+globs: **/*.ts
+---
+- name: TypeScript Rules
+- pattern: "**/*.ts"
+- description: "TypeScriptファイルの標準ルール"
+- rules:
+  - "型安全を保つために any の使用を避ける"
+  - "関数の引数と戻り値の型を必ず指定する"
+  - "async/await を使用し、Promise.then のネストを避ける"
+  - "エラーハンドリングは try/catch を適切に使用する"
+  - "ユーティリティ関数は `/utils/` にまとめて管理する"
+  - "インポートの順番を統一する（標準ライブラリ → 外部ライブラリ → 内部モジュール）"
+  - "Eslint でコード品質をチェックし、CI/CD で適用する"
+
+TODO: コーディングルールのドキュメントをリンクする

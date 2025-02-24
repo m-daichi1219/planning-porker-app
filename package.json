@@ -1,0 +1,24 @@
+{
+  "name": "planning-porker-app",
+  "version": "0.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "docs/*"
+  ],
+  "scripts": {
+    "lint": "eslint . --ext .ts,.vue",
+    "format": "prettier --write .",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e"
+  },
+  "devDependencies": {
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-vue": "^9.32.0",
+    "prettier": "^3.5.2",
+    "turbo": "^2.4.2",
+    "typescript": "^5.7.3"
+  }
+}
