@@ -9,7 +9,7 @@ const mockUseCreateRoom = {
     isLoading: ref(false),
     error: ref(''),
     createRoom: fn(),
-  })
+  }),
 }
 
 const meta = {
@@ -17,7 +17,7 @@ const meta = {
   component: CreateRoom,
   parameters: {
     layout: 'fullscreen',
-    mockData: mockUseCreateRoom
+    mockData: mockUseCreateRoom,
   },
 } satisfies Meta<typeof CreateRoom>
 
@@ -40,9 +40,9 @@ export const Loading: Story = {
         isLoading: ref(true),
         error: ref(''),
         createRoom: fn(),
-      })
-    }
-  }
+      }),
+    },
+  },
 }
 
 // エラー表示の状態
@@ -56,7 +56,7 @@ export const Error: Story = {
         isLoading: ref(false),
         error: ref('部屋の作成に失敗しました。もう一度お試しください。'),
         createRoom: fn(),
-      })
-    }
-  }
-} 
+      }),
+    },
+  },
+}
