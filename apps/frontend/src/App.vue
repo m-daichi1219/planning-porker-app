@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { ref, watch } from 'vue'
+import { useCreateRoom } from '@/composables/room/useCreateRoom'
+import { provide } from 'vue'
 
 const isDark = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
 
 watch(isDark, (newValue) => {
   document.documentElement.classList.toggle('dark', newValue)
 })
+
+provide('useCreateRoom', useCreateRoom)
 </script>
 
 <template>

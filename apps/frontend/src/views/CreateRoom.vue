@@ -21,8 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { useCreateRoom } from '@/composables/room/useCreateRoom'
+import { inject } from 'vue'
+// import { useCreateRoom as defaultUseCreateRoom } from "@/composables/room/useCreateRoom";
 
+const useCreateRoom = inject("useCreateRoom");
 const { isLoading, error, createRoom } = useCreateRoom()
 </script>
 
