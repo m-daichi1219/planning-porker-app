@@ -3,9 +3,9 @@
     <h1 class="title">Planning Poker</h1>
 
     <div class="description">
-      <p>Planning Pokerは、アジャイル開発でストーリーポイントを見積もるためのツールです。</p>
+      <p>プランニングポーカーは、チームでタスクの見積もりを行うための手法です。</p>
       <p>
-        チームメンバーが同時に見積もりを提示することで、より正確な見積もりを導き出すことができます。
+        各メンバーが独立して見積もりを出し、結果を共有・議論することで、より正確な合意を得ることができます。
       </p>
     </div>
 
@@ -24,7 +24,7 @@
 import { inject } from 'vue'
 // import { useCreateRoom as defaultUseCreateRoom } from "@/composables/room/useCreateRoom";
 
-const useCreateRoom = inject("useCreateRoom");
+const useCreateRoom = inject('useCreateRoom')
 const { isLoading, error, createRoom } = useCreateRoom()
 </script>
 

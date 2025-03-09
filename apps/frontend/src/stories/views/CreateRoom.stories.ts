@@ -20,7 +20,7 @@ export const Default: Story = {
   render: () => ({
     components: { CreateRoom },
     setup() {
-      provide('useCreateRoom', useCreateRoomMock())
+      provide('useCreateRoom', () => useCreateRoomMock())
       return {}
     },
     template: '<CreateRoom />',
@@ -32,7 +32,7 @@ export const Loading: Story = {
   render: () => ({
     components: { CreateRoom },
     setup() {
-      provide('useCreateRoom', useCreateRoomMock(true, 'error'))
+      provide('useCreateRoom', () => useCreateRoomMock(true))
       return {}
     },
     template: '<CreateRoom />',
@@ -41,16 +41,14 @@ export const Loading: Story = {
 
 // エラー表示の状態
 export const Error: Story = {
-  args: {
-    // エラー状態の props
-  },
-  parameters: {
-    mockData: {
-      useCreateRoom: () => ({
-        isLoading: ref(false),
-        error: ref('部屋の作成に失敗しました。もう一度お試しください。'),
-        createRoom: fn(),
-      }),
+  render: () => ({
+    components: { CreateRoom },
+    setup() {
+      provide('useCreateRoom', () =>
+        useCreateRoomMock(false, '部屋の作成に失敗しました。もう一度お試しください。'),
+      )
+      return {}
     },
-  },
+    template: '<CreateRoom />',
+  }),
 }
