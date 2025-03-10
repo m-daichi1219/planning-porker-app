@@ -14,3 +14,5 @@ globs: apps/frontend/**/*.vue
   - "v-forを使用する際はkey属性を指定する"
   - "コンポーネントのテストをStorybookで行い、VRT (Visual Regression Test) を実施する"
   - "vueファイルはロジックを持たない。UIに関する画面描画のみ記載する。"
+  - "Vueファイルの実装とStorybookの実装は同時に行う"
+  - "Stroybookはインタラクションテストも実装する"

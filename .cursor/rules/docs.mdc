@@ -1,6 +1,6 @@
 ---
 description: Documentation Rules
-globs: 
+globs: **/*.md
 ---
 - name: Documentation Rules
 - pattern: "docs/**/*.md"
