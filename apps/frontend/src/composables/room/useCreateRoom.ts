@@ -36,10 +36,10 @@ export const useCreateRoom = () => {
   }
 }
 
-export const useCreateRoomMock = (isLoading = false, error = '') => {
+export const useCreateRoomMock = (isLoading = false, error = '', createRoom: () => {}) => {
   return {
     isLoading,
     error,
-    createRoom: async () => {},
+    createRoom,
   }
 }

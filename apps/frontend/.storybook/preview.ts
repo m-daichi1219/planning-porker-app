@@ -8,6 +8,11 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    interactions: {
+      disable: false,
+      autoPlay: true,
+    },
+    actions: { argTypesRegex: '^on[A-Z].*' },
   },
 }
 
