@@ -15,19 +15,13 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-// モック関数を作成
 const createMockRoom = fn()
-
 // 通常の表示状態
 export const Default: Story = {
   render: () => ({
     components: { CreateRoom },
     setup() {
-      provide('useCreateRoom', {
-        isLoading: ref(false),
-        error: ref(''),
-        createRoom: createMockRoom,
-      })
+      provide('useCreateRoom', () => useCreateRoomMock(false, '', createMockRoom))
       return {}
     },
     template: '<CreateRoom />',
