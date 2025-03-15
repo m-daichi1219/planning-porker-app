@@ -2,16 +2,16 @@
 
 ## 1. プロジェクト構成
 
-- [ ] `package.json` の設定（TypeScript, AWS SDK, WebSocket関連パッケージ）
-- [ ] `tsconfig.json` の設定（フロントエンドと同様の厳格な型チェック）
-- [ ] `.gitignore` の設定（node_modules, dist, .env等）
-- [ ] ESLintとPrettierの設定（フロントエンドと統一）
+- [x] `package.json` の設定（TypeScript, AWS SDK, WebSocket関連パッケージ）
+- [x] `tsconfig.json` の設定（フロントエンドと同様の厳格な型チェック）
+- [x] `.gitignore` の設定（node_modules, dist, .env等）
+- [x] ESLintとPrettierの設定（フロントエンドと統一）
 - [ ] Turborepoの設定（フロントエンドと連携）
 
 ## 2. AWS CDKの設定
 
-- [ ] `bin/app.ts` - CDKアプリケーションのエントリーポイント
-- [ ] `lib/backend-stack.ts` - メインのCDKスタック定義
+- [x] `bin/app.ts` - CDKアプリケーションのエントリーポイント
+- [x] `lib/backend-stack.ts` - メインのCDKスタック定義
 - [ ] `lib/constructs/api-gateway.ts` - WebSocket API Gateway構成
 - [ ] `lib/constructs/lambda.ts` - Lambda関数の構成
 - [ ] `lib/constructs/s3.ts` - S3バケット構成（データ保存用）
