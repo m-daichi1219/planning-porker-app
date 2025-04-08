@@ -1,14 +1,119 @@
-# Welcome to your CDK TypeScript project
+# プランニングポーカー バックエンド実装
 
-This is a blank project for CDK development with TypeScript.
+## 概要
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+このディレクトリには、プランニングポーカーアプリケーションのバックエンド実装が含まれています。AWS のサーバーレスアーキテクチャを使用して、WebSocket によるリアルタイム通信と、S3 による状態管理を行います。
 
-## Useful commands
+## アーキテクチャ
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+このバックエンドは以下のコンポーネントで構成されています：
+
+- **AWS CDK**: インフラストラクチャをコードとして定義
+- **API Gateway (WebSocket)**: リアルタイム通信
+- **Lambda**: サーバーレス関数
+- **S3**: ルーム情報のストレージ
+
+## 開発環境のセットアップ
+
+### 前提条件
+
+- Node.js (v22 以上)
+- AWS CLI
+- AWS CDK
+- AWS アカウントとプロファイル設定
+
+### インストール手順
+
+1. 依存パッケージのインストール
+
+   ```bash
+   npm install
+   ```
+
+2. TypeScript のコンパイル
+
+   ```bash
+   npm run build
+   ```
+
+3. CDK のブートストラップ（初回のみ）
+
+   ```bash
+   npm run cdk bootstrap
+   ```
+
+4. CDK スタックのデプロイ
+   ```bash
+   npm run deploy
+   ```
+
+## ディレクトリ構造
+
+```
+.
+├── bin/                # CDKアプリケーションのエントリーポイント
+├── lib/                # CDKスタック定義
+├── src/                # Lambda関数のソースコード
+│   ├── domain/         # ドメインモデルとビジネスロジック
+│   ├── infrastructure/ # インフラストラクチャアダプター
+│   ├── websocket/      # WebSocketハンドラー
+│   └── utils/          # ユーティリティ関数
+├── test/               # テストコード
+├── cdk.json            # CDK設定
+└── tsconfig.json       # TypeScript設定
+```
+
+## テスト
+
+テストは Vitest を使用しています。テストを実行するには以下のコマンドを使用します：
+
+```bash
+npm test         # 全てのテストを実行
+npm test:watch   # ウォッチモードでテストを実行
+```
+
+### テスト結果の構造化
+
+当プロジェクトでは、テスト結果を明確に定義し構造化しています。特に AWS CDK のインフラコードテストでは、以下のような階層的なアプローチを採用しています：
+
+1. **リソースカテゴリごとの検証**
+
+   - S3 リソース、WebSocket API、Lambda 関数、IAM ポリシーなど、リソースタイプごとに独立したテストグループが存在します
+   - 各グループ内で特定のプロパティや設定を検証します
+
+2. **具体的な期待値による検証**
+
+   - 「正しく設定されている」といった曖昧な表現ではなく、具体的な値や状態を検証します
+   - 例：「S3 バケットがバージョニング有効で作成されている」
+
+3. **スナップショットテスト**
+   - スタック全体の構造変化を検出するためのスナップショットテストを実施しています
+   - 意図しない変更があった場合に即座に検出できます
+
+## デプロイ
+
+テスト環境にデプロイするには：
+
+```bash
+npm run deploy
+```
+
+本番環境にデプロイするには：
+
+```bash
+npm run deploy -- --context environment=production
+```
+
+## WebSocket API
+
+WebSocket API は以下のメッセージタイプをサポートしています：
+
+- **vote**: 投票をサブミットする
+- **reveal_votes**: 全ての投票を公開する
+- **reset_votes**: 投票をリセットする
+
+## バックエンド設計の詳細
+
+詳細なバックエンド設計については、[アーキテクチャ設計.md](../../docs/アーキテクチャ設計.md)を参照してください。
+
+テスト方針の詳細については、[テスト方針設計.md](../../docs/テスト方針設計.md)を参照してください。
