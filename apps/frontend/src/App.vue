@@ -1,26 +1,14 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { ref, watch } from 'vue'
 import { useCreateRoom } from '@/composables/room/useCreateRoom'
 import { provide } from 'vue'
+import { createRoomKey } from './composables/room/types'
 
-const isDark = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
-
-watch(isDark, (newValue) => {
-  document.documentElement.classList.toggle('dark', newValue)
-})
-
-provide('useCreateRoom', useCreateRoom)
+provide(createRoomKey, useCreateRoom)
 </script>
 
 <template>
   <div class="min-h-screen">
-    <button 
-      @click="isDark = !isDark"
-      class="fixed top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-800"
-    >
-      {{ isDark ? '🌙' : '☀️' }}
-    </button>
     <RouterView />
   </div>
 </template>

@@ -1,7 +1,17 @@
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-export const useCreateRoom = () => {
+// コンポーザブルの戻り値の型
+export type UseCreateRoomReturnType = {
+  isLoading: Ref<boolean>
+  error: Ref<string>
+  createRoom: () => Promise<void>
+}
+
+// コンポーザブル関数自体の型
+export type UseCreateRoomType = () => UseCreateRoomReturnType
+
+export const useCreateRoom: UseCreateRoomType = () => {
   // const router = useRouter()
   const isLoading = ref(false)
   const error = ref('')

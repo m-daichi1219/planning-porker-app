@@ -21,11 +21,13 @@
 </template>
 
 <script setup lang="ts">
+import { createRoomKey } from '@/composables/room/types'
 import { inject } from 'vue'
-// import { useCreateRoom as defaultUseCreateRoom } from "@/composables/room/useCreateRoom";
 
-const useCreateRoom = inject('useCreateRoom')
-const { isLoading, error, createRoom } = useCreateRoom()
+const useCreateRoomComposable = inject(createRoomKey)
+if (!useCreateRoomComposable) throw new Error('useCreateRoomComposable is not provided')
+
+const { isLoading, error, createRoom } = useCreateRoomComposable()
 </script>
 
 <style scoped>
