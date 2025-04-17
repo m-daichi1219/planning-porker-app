@@ -3,6 +3,7 @@ import CreateRoom from '@/views/createRoom.vue'
 import { provide, ref } from 'vue'
 import { fn, userEvent, within, expect } from '@storybook/test'
 import { useCreateRoomMock } from '@/composables/room/useCreateRoom'
+import { createRoomKey } from '@/composables/room/types'
 
 const meta = {
   title: 'Views/部屋作成画面',
@@ -21,7 +22,7 @@ export const Default: Story = {
   render: () => ({
     components: { CreateRoom },
     setup() {
-      provide('useCreateRoom', () => useCreateRoomMock(false, '', createMockRoom))
+      provide(createRoomKey, () => useCreateRoomMock(false, '', createMockRoom))
       return {}
     },
     template: '<CreateRoom />',
@@ -51,7 +52,7 @@ export const Loading: Story = {
   render: () => ({
     components: { CreateRoom },
     setup() {
-      provide('useCreateRoom', () => useCreateRoomMock(true, '', () => fn()))
+      provide(createRoomKey, () => useCreateRoomMock(true, '', () => {}))
       return {}
     },
     template: '<CreateRoom />',
@@ -72,8 +73,8 @@ export const Error: Story = {
   render: () => ({
     components: { CreateRoom },
     setup() {
-      provide('useCreateRoom', () =>
-        useCreateRoomMock(false, '部屋の作成に失敗しました。もう一度お試しください。', () => fn()),
+      provide(createRoomKey, () =>
+        useCreateRoomMock(false, '部屋の作成に失敗しました。もう一度お試しください。', () => {}),
       )
       return {}
     },

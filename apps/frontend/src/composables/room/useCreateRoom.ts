@@ -46,7 +46,18 @@ export const useCreateRoom: UseCreateRoomType = () => {
   }
 }
 
-export const useCreateRoomMock = (isLoading = false, error = '', createRoom: () => {}) => {
+// モック関数: isLoading と error を ref でラップして返すように修正
+export const useCreateRoomMock = (
+  initialIsLoading = false,
+  initialError = '',
+  createRoomFn: () => Promise<void> | void = () => {},
+): UseCreateRoomReturnType => {
+  const isLoading = ref(initialIsLoading)
+  const error = ref(initialError)
+  const createRoom = async () => {
+    await createRoomFn()
+  } // async にして Promise<void> に合わせる
+
   return {
     isLoading,
     error,
