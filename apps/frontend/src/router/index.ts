@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CreateRoom from '../views/CreateRoom.vue'
+import CreateRoom from '../views/createRoom.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

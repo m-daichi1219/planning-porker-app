@@ -13,7 +13,9 @@
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test-storybook:ci": "npx test-storybook",
+    "test-storybook": "npx test-storybook"
   },
   "dependencies": {
     "pinia": "^3.0.1",
@@ -27,6 +29,7 @@
     "@storybook/addon-onboarding": "^8.5.8",
     "@storybook/blocks": "^8.5.8",
     "@storybook/test": "^8.5.8",
+    "@storybook/test-runner": "^0.19.1",
     "@storybook/vue3": "^8.5.8",
     "@storybook/vue3-vite": "^8.5.8",
     "@testing-library/vue": "^8.1.0",

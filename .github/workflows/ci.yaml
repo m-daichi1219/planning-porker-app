@@ -1,21 +1,55 @@
 name: CI
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  test:
+  lint-and-test:
+    name: Lint and Unit Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run lint --workspace=apps/frontend
+      - run: npm run lint --workspace=apps/backend
+      # - run: npm test --workspace=apps/frontend # Vitest がまだ設定されていない可能性
+      - run: npm test --workspace=apps/backend
+
+  e2e-tests:
+    name: E2E Tests
+    needs: lint-and-test # lint-and-test ジョブが成功したら実行
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # プロジェクトで使用しているNode.jsのバージョンに合わせてください
+
       - name: Install dependencies
-        run: npm install
-      - name: Lint
-        run: npm run lint
-      - name: Run unit tests
-        run: npm run test
-      - name: Run E2E tests
-        run: npm run test:e2e
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        # `npx playwright install --with-deps` を使用すると、必要な OS ライブラリもインストールされる
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run Playwright tests
+        # webServerオプションにより、テスト実行前に自動でフロントエンド開発サーバーが起動される
+        run: npm run test --workspace=apps/e2e
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always() # テストが失敗してもレポートをアップロードする
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: playwright-report/
+          retention-days: 30

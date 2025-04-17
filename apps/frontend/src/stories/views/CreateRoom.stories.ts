@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import CreateRoom from '@/views/CreateRoom.vue'
+import CreateRoom from '@/views/createRoom.vue'
 import { provide, ref } from 'vue'
 import { fn, userEvent, within, expect } from '@storybook/test'
 import { useCreateRoomMock } from '@/composables/room/useCreateRoom'
 
 const meta = {
-  title: 'Views/CreateRoom',
+  title: 'Views/部屋作成画面',
   component: CreateRoom,
   parameters: {
     layout: 'fullscreen',
