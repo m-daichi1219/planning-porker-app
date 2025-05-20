@@ -104,11 +104,11 @@ export class BackendStack extends cdk.Stack {
 
     if (isTest) {
       // テスト環境では警告を出すだけ（fromAssetはモックされるため実際のパスは重要ではない）
+      // eslint-disable-next-line no-console
       console.log(`テスト環境のため、モックコードを使用します: ${handlerPath}`);
     }
 
     // fromAssetを使用（テスト中はモックされる）
-
     return new NodejsFunction(this, id, {
       runtime: lambda.Runtime.NODEJS_22_X,
       handler: 'index.handler',

@@ -1,12 +1,15 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { ApiGatewayManagementApi } from 'aws-sdk';
+import { Logger } from '@aws-lambda-powertools/logger';
+
+const logger = new Logger();
 
 /**
  * WebSocketメッセージ受信時のデフォルトハンドラー
  * メッセージを処理し、必要に応じて返信する
  */
 export const handler: APIGatewayProxyHandler = async (event) => {
-  console.log('WebSocketメッセージイベント:', JSON.stringify(event));
+  logger.info('WebSocket message event received', { event });
 
   try {
     const connectionId = event.requestContext.connectionId;
@@ -27,9 +30,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       case 'vote':
         // 投票処理
         if (connectionId) {
-          await handleVote(connectionId, data, apigwManagementApi);
+          await handleVote(connectionId, data, apigwManagementApi, logger);
         } else {
-          console.error('connectionIdが不明です');
+          logger.warn('ConnectionID is missing for vote action', {
+            requestContext: event.requestContext,
+          });
           return { statusCode: 400, body: 'ConnectionID is missing' };
         }
         break;
@@ -37,9 +42,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       case 'reveal_votes':
         // 投票結果の公開処理
         if (connectionId) {
-          await handleRevealVotes(connectionId, data, apigwManagementApi);
+          await handleRevealVotes(connectionId, data, apigwManagementApi, logger);
         } else {
-          console.error('connectionIdが不明です');
+          logger.warn('ConnectionID is missing for reveal_votes action', {
+            requestContext: event.requestContext,
+          });
           return { statusCode: 400, body: 'ConnectionID is missing' };
         }
         break;
@@ -47,9 +54,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       case 'reset_votes':
         // 投票のリセット処理
         if (connectionId) {
-          await handleResetVotes(connectionId, data, apigwManagementApi);
+          await handleResetVotes(connectionId, data, apigwManagementApi, logger);
         } else {
-          console.error('connectionIdが不明です');
+          logger.warn('ConnectionID is missing for reset_votes action', {
+            requestContext: event.requestContext,
+          });
           return { statusCode: 400, body: 'ConnectionID is missing' };
         }
         break;
@@ -61,8 +70,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             type: 'error',
             message: '不明なアクションです',
           });
+          logger.info('Sent error for unknown action to client', { connectionId, action });
         } else {
-          console.error('connectionIdが不明です');
+          logger.warn('ConnectionID is missing for unknown action', {
+            requestContext: event.requestContext,
+            action,
+          });
           return { statusCode: 400, body: 'ConnectionID is missing' };
         }
     }
@@ -72,7 +85,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: JSON.stringify({ message: 'メッセージ処理成功' }),
     };
   } catch (error) {
-    console.error('メッセージ処理中にエラーが発生しました:', error);
+    logger.error('Error processing message in default handler', {
+      errorDetails: error as Error,
+      eventReceived: event,
+    });
     return {
       statusCode: 500,
       body: JSON.stringify({ message: 'サーバーエラーが発生しました' }),
@@ -111,10 +127,11 @@ async function handleVote(
   connectionId: string,
   data: VoteData,
   api: ApiGatewayManagementApi,
+  loggerInstance: Logger, // loggerインスタンスを受け取る
 ): Promise<void> {
   // 投票データをS3に保存し、他の接続者に通知する
   // 実装予定
-  console.log(`投票処理: connectionId=${connectionId}, data=`, data);
+  loggerInstance.info('Processing vote', { connectionId, data });
 
   // クライアントに確認メッセージを送信
   await sendToClient(api, connectionId, {
@@ -130,10 +147,11 @@ async function handleRevealVotes(
   connectionId: string,
   data: { roomId: string },
   api: ApiGatewayManagementApi,
+  loggerInstance: Logger, // loggerインスタンスを受け取る
 ): Promise<void> {
   // S3から投票データを取得し、すべての接続者に結果を送信する
   // 実装予定
-  console.log(`投票結果公開処理: connectionId=${connectionId}, data=`, data);
+  loggerInstance.info('Processing reveal votes', { connectionId, data });
 
   // テスト用のダミーデータ
   const dummyResults = {
@@ -158,10 +176,11 @@ async function handleResetVotes(
   connectionId: string,
   data: { roomId: string },
   api: ApiGatewayManagementApi,
+  loggerInstance: Logger, // loggerインスタンスを受け取る
 ): Promise<void> {
   // S3の投票データをリセットし、すべての接続者に通知する
   // 実装予定
-  console.log(`投票リセット処理: connectionId=${connectionId}, data=`, data);
+  loggerInstance.info('Processing reset votes', { connectionId, data });
 
   // クライアントにリセット通知を送信
   await sendToClient(api, connectionId, {
@@ -185,9 +204,13 @@ async function sendToClient(
         Data: JSON.stringify(payload),
       })
       .promise();
+    logger.debug('Message sent to client', { connectionId, payloadType: payload.type });
   } catch (error) {
-    // 接続が存在しない場合など
-    console.error('メッセージ送信エラー:', error);
-    throw error;
+    logger.error('Failed to send message to client', {
+      errorDetails: error as Error,
+      connectionIdContext: connectionId,
+    });
+    // 必要に応じてエラーを再スローするか、ハンドリングする
+    // throw error; // 例えば、呼び出し元でこのエラーを処理したい場合
   }
 }
