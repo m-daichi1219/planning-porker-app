@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import CreateRoom from '@/views/createRoom.vue'
-import { provide, ref } from 'vue'
+import { provide } from 'vue'
 import { fn, userEvent, within, expect } from '@storybook/test'
 import { useCreateRoomMock } from '@/composables/room/useCreateRoom'
 import { createRoomKey } from '@/composables/room/types'

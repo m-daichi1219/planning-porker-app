@@ -1,5 +1,4 @@
 import { ref, type Ref } from 'vue'
-import { useRouter } from 'vue-router'
 
 // コンポーザブルの戻り値の型
 export type UseCreateRoomReturnType = {
@@ -27,12 +26,11 @@ export const useCreateRoom: UseCreateRoomType = () => {
       // TODO: APIを呼び出して部屋を作成する
       // const response = await createRoomAPI()
       // const roomId = response.roomId
-      const roomId = 'dummy-room-id' // 仮実装
-
+      // const roomId = 'dummy-room-id' // 仮実装
       // TODO: ページ遷移するかポップアップでURLとページ遷移用ボタンを表示するか
       // 検討してから実装する
       // router.push(`/room/${roomId}`)
-    } catch (e) {
+    } catch {
       error.value = '部屋の作成に失敗しました。もう一度お試しください。'
     } finally {
       isLoading.value = false
