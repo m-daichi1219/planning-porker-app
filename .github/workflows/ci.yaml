@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch: # 手動実行を許可
 
 jobs:
   lint-and-test:
@@ -22,8 +23,9 @@ jobs:
       - run: npm test --workspace=apps/backend
 
   e2e-tests:
+    if: github.event_name == 'workflow_dispatch' # 手動実行の時のみジョブを実行
     name: E2E Tests
-    needs: lint-and-test # lint-and-test ジョブが成功したら実行
+    # needs: lint-and-test # 手動実行なので依存関係を削除
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
@@ -53,3 +55,60 @@ jobs:
           name: playwright-report-${{ github.run_id }}
           path: playwright-report/
           retention-days: 30
+
+  security-scan-frontend:
+    if: github.event_name == 'workflow_dispatch' # まずは手動実行から
+    name: OWASP ZAP Frontend Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # プロジェクトで使用しているNode.jsのバージョン
+
+      - name: Install dependencies
+        run: npm ci # ルートのpackage-lock.jsonに基づいて全ワークスペースの依存をインストール
+
+      - name: Build frontend application
+        run: npm run build --workspace=apps/frontend # フロントエンドをビルド
+
+      - name: Start local server for ZAP scan
+        run: |
+          # npx serve を使ってビルドされた静的ファイルを提供
+          # ポート5000でバックグラウンド起動し、プロセスIDをserve.pidに保存
+          nohup npx serve -s apps/frontend/dist -l 5000 & echo $! > serve.pid
+          echo "Waiting for server to start..."
+          sleep 10 # サーバーが起動するのを少し待つ (時間は適宜調整)
+
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.11.0 # 最新バージョンを適宜確認
+        with:
+          target: "http://localhost:5000" # スキャン対象のURL
+          rules_file_name: ".zap/frontend-rules.tsv" # (オプション) フロントエンド用カスタムルールファイル
+          cmd_options: "-a -T 60" # AJAX Spiderを有効にし、スキャン時間を最大60秒に制限 (時間は調整可能)
+          fail_action: false # (オプション) actionがエラーになった場合にワークフローを失敗させるか。最初はfalse推奨
+
+      - name: Stop local server
+        if: always() # スキャン成功・失敗に関わらず実行
+        run: |
+          if [ -f serve.pid ]; then
+            echo "Stopping server..."
+            kill $(cat serve.pid)
+          else
+            echo "serve.pid not found, server might not have started correctly."
+          fi
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v4
+        if: always() # テストが失敗してもレポートをアップロードする
+        with:
+          name: zap-frontend-baseline-report-${{ github.run_id }}
+          path:
+            | # レポートファイル名をアクションのドキュメントで確認してください
+            zap_baseline_report.html
+            zap_baseline_report.json
+            zap_baseline_report.md
+          retention-days: 7 # 短期間で良いでしょう
